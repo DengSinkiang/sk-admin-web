@@ -26,7 +26,7 @@ npm run dev
 npm run build
 ```
 
-### nginx 没有安装nginx请自行百度安装
+### nginx 没有安装 nginx 请自行百度安装
 ```
 server {
     listen       80;
@@ -45,7 +45,7 @@ server {
 }
 server {
     listen       80;
-    server_name  api页面 # api.rbac.com;
+    server_name  api 页面 # api.rbac.com;
 
     proxy_set_header X-Forwarded-Host $host;
     proxy_set_header X-Forwarded-Server $host;
@@ -59,6 +59,6 @@ server {
 
 }
 # 修改 prod.env.js
-BASE_API: '"api地址 # http://api.rbac.com"'
+BASE_API: '"api 地址 # http://api.rbac.com"'
 ```
 
