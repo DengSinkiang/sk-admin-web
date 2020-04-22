@@ -1,12 +1,12 @@
-# SKADMIN-WEB
+# SK-ADMIN-WEB
 
-SKADMIN 前端源码
+SK-ADMIN 前端源码
 
 #### 项目源码
 
 |     |   后端源码  |   前端源码  |
 |---  |--- | --- |
-|  github   |  https://github.com/DengSinkiang/skadmin   |  https://github.com/DengSinkiang/skadmin-web   |
+|  github   |  https://github.com/DengSinkiang/sk-admin   |  https://github.com/DengSinkiang/sk-admin-web   |
 
 #### 前端模板
 
