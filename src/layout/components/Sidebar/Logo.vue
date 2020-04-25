@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: 'SKADMIN-后台管理',
+      title: 'SK-ADMIN-后台管理',
       logo: Logo
     }
   }

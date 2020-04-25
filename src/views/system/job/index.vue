@@ -8,18 +8,18 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('name')" prop="name" label="名称" />
-      <el-table-column v-if="columns.visible('dept')" prop="dept" label="所属部门">
+      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="dept" label="所属部门">
         <template slot-scope="scope">
           <div>{{ scope.row.deptSuperiorName ? scope.row.deptSuperiorName + ' / ' : '' }}{{ scope.row.dept.name }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('sort')" prop="sort" label="排序">
+      <el-table-column prop="sort" label="排序">
         <template slot-scope="scope">
           {{ scope.row.sort }}
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('status')" prop="status" label="状态" align="center">
+      <el-table-column prop="status" label="状态" align="center">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.enabled"
@@ -29,7 +29,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
+      <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -66,18 +66,18 @@ import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 
-// crud交由presenter持有
-const crud = CRUD({
-  title: '岗位',
-  url: 'api/job',
-  sort: ['sort,asc', 'id,desc'],
-  crudMethod: { ...crudJob }
-})
-
 export default {
   name: 'Job',
   components: { eHeader, eForm, crudOperation, pagination, udOperation },
-  mixins: [presenter(crud)],
+  cruds() {
+    return CRUD({
+      title: '岗位',
+      url: 'api/job',
+      sort: ['sort,asc', 'id,desc'],
+      crudMethod: { ...crudJob }
+    })
+  },
+  mixins: [presenter()],
   // 数据字典
   dicts: ['job_status'],
   data() {
@@ -97,7 +97,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        // eslint-disable-next-line no-undef
         crud.crudMethod.edit(data).then(() => {
+          // eslint-disable-next-line no-undef
           crud.notify(this.dict.label.job_status[val] + '成功', 'success')
         }).catch(err => {
           data.enabled = !data.enabled

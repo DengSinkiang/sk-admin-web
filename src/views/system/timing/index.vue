@@ -16,7 +16,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission">
         <!-- 任务日志 -->
@@ -59,24 +59,24 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
       <el-table-column :selectable="checkboxT" type="selection" width="55" />
-      <el-table-column v-if="columns.visible('jobName')" :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称" />
-      <el-table-column v-if="columns.visible('beanName')" :show-overflow-tooltip="true" prop="beanName" label="Bean名称" />
-      <el-table-column v-if="columns.visible('methodName')" :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法" />
-      <el-table-column v-if="columns.visible('params')" :show-overflow-tooltip="true" prop="params" width="80px" label="参数" />
-      <el-table-column v-if="columns.visible('cronExpression')" :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式" />
-      <el-table-column v-if="columns.visible('isPause')" :show-overflow-tooltip="true" prop="isPause" width="90px" label="状态">
+      <el-table-column :show-overflow-tooltip="true" prop="jobName" width="100px" label="任务名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="beanName" label="Bean名称" />
+      <el-table-column :show-overflow-tooltip="true" prop="methodName" width="90px" label="执行方法" />
+      <el-table-column :show-overflow-tooltip="true" prop="params" width="80px" label="参数" />
+      <el-table-column :show-overflow-tooltip="true" prop="cronExpression" width="100px" label="cron表达式" />
+      <el-table-column :show-overflow-tooltip="true" prop="isPause" width="90px" label="状态">
         <template slot-scope="scope">
           <el-tag :type="scope.row.isPause ? 'warning' : 'success'">{{ scope.row.isPause ? '已暂停' : '运行中' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('remark')" :show-overflow-tooltip="true" prop="remark" label="描述" />
-      <el-table-column v-if="columns.visible('createTime')" :show-overflow-tooltip="true" prop="createTime" label="创建日期">
+      <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />
+      <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -117,13 +117,14 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '定时任务', url: 'api/jobs', crudMethod: { ...crudJob }})
 const defaultForm = { id: null, jobName: null, beanName: null, methodName: null, params: null, cronExpression: null, isPause: false, remark: null }
 export default {
   name: 'Timing',
   components: { Log, pagination, crudOperation, rrOperation },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '定时任务', url: 'api/jobs', crudMethod: { ...crudJob }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       delLoading: false,

@@ -24,7 +24,7 @@
               <li><svg-icon icon-class="user1" /> 用户昵称 <div class="user-right">{{ user.nickName }}</div></li>
               <li><svg-icon icon-class="phone" /> 手机号码 <div class="user-right">{{ user.phone }}</div></li>
               <li><svg-icon icon-class="email" /> 用户邮箱 <div class="user-right">{{ user.email }}</div></li>
-              <li><svg-icon icon-class="dept" /> 所属部门 <div class="user-right"> {{ user.dept }} / {{ user.job }}</div></li>
+              <li><svg-icon icon-class="dept" /> 所属部门 <div class="user-right"> {{ user.dept.name }} / {{ user.job.name }}</div></li>
               <li>
                 <svg-icon icon-class="anq" /> 安全设置
                 <div class="user-right">
@@ -169,7 +169,7 @@ export default {
       }
     },
     beforeInit() {
-      this.url = 'api/log/user'
+      this.url = 'api/logs/user'
       return true
     },
     handleSuccess(response, file, fileList) {

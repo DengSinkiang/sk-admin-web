@@ -64,7 +64,7 @@
                 :value="item.key"
               />
             </el-select>
-            <rrOperation :crud="crud" />
+            <rrOperation />
           </div>
           <crudOperation show="" :permission="permission" />
         </div>
@@ -138,23 +138,23 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button type="text" @click="crud.cancelCU">取消</el-button>
-            <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+            <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
           </div>
         </el-dialog>
         <!--表格渲染-->
         <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
           <el-table-column :selectable="checkboxT" type="selection" width="55" />
-          <el-table-column v-if="columns.visible('username')" :show-overflow-tooltip="true" prop="username" label="用户名" />
-          <el-table-column v-if="columns.visible('nickName')" :show-overflow-tooltip="true" prop="nickName" label="昵称" />
-          <el-table-column v-if="columns.visible('sex')" prop="sex" label="性别" />
-          <el-table-column v-if="columns.visible('phone')" :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
-          <el-table-column v-if="columns.visible('email')" :show-overflow-tooltip="true" width="125" prop="email" label="邮箱" />
-          <el-table-column v-if="columns.visible('dept')" :show-overflow-tooltip="true" width="110" prop="dept" label="部门 / 岗位">
+          <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
+          <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
+          <el-table-column prop="sex" label="性别" />
+          <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
+          <el-table-column :show-overflow-tooltip="true" width="125" prop="email" label="邮箱" />
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="dept" label="部门 / 岗位">
             <template slot-scope="scope">
               <div>{{ scope.row.dept.name }} / {{ scope.row.job.name }}</div>
             </template>
           </el-table-column>
-          <el-table-column v-if="columns.visible('enabled')" label="状态" align="center" prop="enabled">
+          <el-table-column label="状态" align="center" prop="enabled">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.enabled"
@@ -165,7 +165,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column v-if="columns.visible('createTime')" :show-overflow-tooltip="true" prop="createTime" width="140" label="创建日期">
+          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="140" label="创建日期">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -209,13 +209,14 @@ import { mapGetters } from 'vuex'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 let userRoles = []
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '用户', url: 'api/user', crudMethod: { ...crudUser }})
 const defaultForm = { id: null, username: null, nickName: null, sex: '男', email: null, enabled: 'false', roles: [], job: { id: null }, dept: { id: null }, phone: null }
 export default {
   name: 'User',
   components: { Treeselect, crudOperation, rrOperation, udOperation, pagination },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '用户', url: 'api/user', crudMethod: { ...crudUser }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   // 数据字典
   dicts: ['user_status'],
   data() {

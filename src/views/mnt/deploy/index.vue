@@ -16,7 +16,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission">
         <template slot="right">
@@ -89,7 +89,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
     <!--统还原组件-->
@@ -98,9 +98,9 @@
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" highlight-current-row stripe style="width: 100%" @selection-change="crud.selectionChangeHandler" @current-change="handleCurrentChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('app.name')" prop="app.name" label="应用名称" />
-      <el-table-column v-if="columns.visible('servers')" prop="servers" label="服务器列表" />
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="部署日期">
+      <el-table-column prop="app.name" label="应用名称" />
+      <el-table-column prop="servers" label="服务器列表" />
+      <el-table-column prop="createTime" label="部署日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -128,12 +128,15 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
+
 const defaultForm = { id: null, app: { id: null }, deploys: [] }
 export default {
+  name: 'Deploy',
   components: { dForm, fForm, pagination, crudOperation, rrOperation, udOperation },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '部署', url: 'api/deploy', crudMethod: { ...crudDeploy }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       currentRow: {}, selectIndex: '', appName: '', urlHistory: '',

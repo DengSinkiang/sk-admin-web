@@ -19,7 +19,7 @@
         <el-select v-model="query.enabled" clearable size="small" placeholder="状态" class="filter-item" style="width: 90px" @change="crud.toQuery">
           <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
         </el-select>
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
@@ -38,14 +38,14 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" default-expand-all :data="crud.data" row-key="id" @select="crud.selectChange" @select-all="crud.selectAllChange" @selection-change="crud.selectionChangeHandler">
       <el-table-column :selectable="checkboxT" type="selection" width="55" />
-      <el-table-column v-if="columns.visible('name')" label="名称" prop="name" />
-      <el-table-column v-if="columns.visible('enabled')" label="状态" align="center" prop="enabled">
+      <el-table-column label="名称" prop="name" />
+      <el-table-column label="状态" align="center" prop="enabled">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.enabled"
@@ -56,7 +56,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
+      <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -84,13 +84,14 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '部门', url: 'api/dept', crudMethod: { ...crudDept }})
 const defaultForm = { id: null, name: null, pid: 1, enabled: 'true' }
 export default {
   name: 'Dept',
   components: { Treeselect, crudOperation, rrOperation, udOperation },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '部门', url: 'api/dept', crudMethod: { ...crudDept }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   // 设置数据字典
   dicts: ['dept_status'],
   data() {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg-icon icon-class="github" @click="click" />
+    <svg-icon icon-class="download" @click="click" />
   </div>
 </template>
 
@@ -9,7 +9,7 @@ export default {
   name: 'Github',
   methods: {
     click() {
-      window.open('https://github.com/DengSinkiang/skadmin', '_blank')
+      window.open('https://github.com/DengSinkiang/sk-admin', '_blank')
     }
   }
 }

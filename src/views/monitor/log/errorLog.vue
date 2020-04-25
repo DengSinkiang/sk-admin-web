@@ -13,7 +13,7 @@
           @click="confirmDelAll()"
         >
           清空
-        </el-button> v-if="columns.visible('username')"
+        </el-button>
       </crudOperation>
     </div>
     <!--表格渲染-->
@@ -30,12 +30,12 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('username')" prop="username" label="用户名" />
-      <el-table-column v-if="columns.visible('requestIp')" prop="requestIp" label="IP" />
-      <el-table-column v-if="columns.visible('address')" :show-overflow-tooltip="true" prop="address" label="IP来源" />
-      <el-table-column v-if="columns.visible('description')" prop="description" label="描述" />
-      <el-table-column v-if="columns.visible('browser')" prop="browser" label="浏览器" />
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
+      <el-table-column prop="username" label="用户名" />
+      <el-table-column prop="requestIp" label="IP" />
+      <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
+      <el-table-column prop="description" label="描述" />
+      <el-table-column prop="browser" label="浏览器" />
+      <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -61,12 +61,13 @@ import CRUD, { presenter } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
 import pagination from '@crud/Pagination'
 
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '异常日志', url: 'api/log/error' })
 export default {
   name: 'ErrorLog',
   components: { Search, crudOperation, pagination },
-  mixins: [presenter(defaultCrud)],
+  cruds() {
+    return CRUD({ title: '异常日志', url: 'api/log/error' })
+  },
+  mixins: [presenter()],
   data() {
     return {
       errorInfo: '', dialog: false

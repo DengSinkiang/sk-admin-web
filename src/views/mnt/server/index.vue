@@ -16,7 +16,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <rrOperation :crud="crud" />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
@@ -42,17 +42,17 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="crud.cancelCU">取消</el-button>
-        <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
       </div>
     </el-dialog>
     <!--表格渲染-->
     <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%" @selection-change="crud.selectionChangeHandler">
       <el-table-column type="selection" width="55" />
-      <el-table-column v-if="columns.visible('name')" prop="name" label="名称" />
-      <el-table-column v-if="columns.visible('ip')" prop="ip" label="IP" />
-      <el-table-column v-if="columns.visible('port')" prop="port" label="端口" />
-      <el-table-column v-if="columns.visible('account')" prop="account" label="账号" />
-      <el-table-column v-if="columns.visible('createTime')" prop="createTime" label="创建日期">
+      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="ip" label="IP" />
+      <el-table-column prop="port" label="端口" />
+      <el-table-column prop="account" label="账号" />
+      <el-table-column prop="createTime" label="创建日期">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -81,13 +81,15 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-// crud交由presenter持有
-const defaultCrud = CRUD({ title: '服务器', url: 'api/serverDeploy', crudMethod: { ...crudServer }})
+
 const defaultForm = { id: null, name: null, ip: null, port: 22, account: 'root', password: null }
 export default {
   name: 'Server',
   components: { pagination, crudOperation, rrOperation, udOperation },
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  cruds() {
+    return CRUD({ title: '服务器', url: 'api/serverDeploy', crudMethod: { ...crudServer }})
+  },
+  mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
     return {
       accountList: [],
