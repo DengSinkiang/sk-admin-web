@@ -65,7 +65,7 @@ export default {
   name: 'ErrorLog',
   components: { Search, crudOperation, pagination },
   cruds() {
-    return CRUD({ title: '异常日志', url: 'api/log/error' })
+    return CRUD({ title: '异常日志', url: 'api/logs/error' })
   },
   mixins: [presenter()],
   data() {

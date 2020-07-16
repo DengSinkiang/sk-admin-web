@@ -2,21 +2,21 @@ import request from '@/utils/request'
 
 export function getErrDetail(id) {
   return request({
-    url: 'api/log/error/' + id,
+    url: 'api/logs/error/' + id,
     method: 'get'
   })
 }
 
 export function delAllError() {
   return request({
-    url: 'api/log/del/error',
+    url: 'api/logs/del/error',
     method: 'delete'
   })
 }
 
 export function delAllInfo() {
   return request({
-    url: 'api/log/del/info',
+    url: 'api/logs/del/info',
     method: 'delete'
   })
 }
